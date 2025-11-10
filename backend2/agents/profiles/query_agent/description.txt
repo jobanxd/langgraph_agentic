@@ -1,1 +1,0 @@
-Specialized agent that translates natural language questions about insurance policies into SQL queries, executes them against the SQLite database, and returns formatted results.
