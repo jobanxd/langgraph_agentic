@@ -1,0 +1,16 @@
+Claim_ID,Policy_ID,Customer_ID,Claim_Date,Claim_Type,Claim_Amount,Approved_Amount,Status,Processing_Days,Adjuster_ID,Description
+CLM001,POL002,CUST1002,2023-08-15,Health Insurance,8500,8000,Approved,12,ADJ201,Hospital surgery expenses
+CLM002,POL005,CUST1005,2023-07-10,Auto Insurance,4200,4200,Approved,8,ADJ202,Vehicle collision repair
+CLM003,POL005,CUST1005,2023-09-22,Auto Insurance,1800,1500,Approved,10,ADJ202,Windshield replacement
+CLM004,POL007,CUST1007,2023-07-30,Home Insurance,15000,14500,Approved,18,ADJ203,Water damage restoration
+CLM005,POL010,CUST1010,2023-10-05,Health Insurance,3200,3200,Approved,7,ADJ201,Emergency room visit
+CLM006,POL014,CUST1014,2023-11-12,Auto Insurance,6500,6000,Approved,15,ADJ204,Rear-end collision
+CLM007,POL019,CUST1019,2023-06-20,Health Insurance,12000,11000,Approved,20,ADJ205,Medical procedure
+CLM008,POL019,CUST1019,2023-10-18,Health Insurance,5500,5500,Approved,9,ADJ205,Prescription medications
+CLM009,POL020,CUST1020,2023-08-20,Home Insurance,8900,8500,Approved,14,ADJ203,Fire damage repair
+CLM010,POL024,CUST1024,2023-09-05,Auto Insurance,3400,3200,Approved,11,ADJ202,Side mirror damage
+CLM011,POL003,CUST1003,2023-11-25,Home Insurance,2500,2500,Processing,5,ADJ206,Roof leak repair
+CLM012,POL011,CUST1011,2023-10-30,Auto Insurance,7800,0,Denied,8,ADJ204,Pre-existing damage
+CLM013,POL006,CUST1006,2023-09-15,Health Insurance,4500,4200,Approved,13,ADJ201,Diagnostic tests
+CLM014,POL012,CUST1012,2023-11-18,Home Insurance,11000,10500,Processing,7,ADJ203,Storm damage
+CLM015,POL021,CUST1021,2023-10-22,Auto Insurance,5200,5000,Approved,10,ADJ202,Bumper replacement

@@ -1,20 +1,50 @@
-from fastapi import FastAPI
-from backend.routers import chat_router
+import os
 import logging
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 
-# Configure global logging
+from core.settings import settings
+from routers import chatbot_router
+from utils.logging_utils import boxed_log
+
 logging.basicConfig(
-    level=logging.INFO,  # You can use DEBUG for even more detail
-    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
+    level=settings.LOG_LEVEL,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
-
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Agentic AI with Gemini + LangGraph")
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator:
+    try:
+        os.environ["GOOGLE_API_KEY"] = settings.GOOGLE_API_KEY
+        os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = str(settings.GOOGLE_GENAI_USE_VERTEXAI)
+        boxed_log(f"{settings.APP_NAME} started successfully!!!", logger, level="info")
+        yield
+        boxed_log(f"{settings.APP_NAME} is shutting down...", logger, level="info")
+    except Exception as e:
+        logger.error(f"Failed to start application : {e}")
+        raise
 
-app.include_router(chat_router.router)
+app = FastAPI(
+    title=settings.APP_NAME,
+    description=settings.DESCRIPTION,
+    version=settings.VERSION,
+    lifespan=lifespan,
+)
 
-@app.get("/")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(chatbot_router.router, prefix="/api")
+
+@app.get("/", include_in_schema=False)
 def root():
-    return {"message": "Welcome to the Agentic AI with Gemini + LangGraph API!"}
-
+    return RedirectResponse(url="/docs")
