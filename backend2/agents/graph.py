@@ -38,10 +38,8 @@ def root_agent_node(state: AgentState) -> AgentState:
     logger.info("ROOT AGENT NODE ENTERED")
     logger.info(f"Current next_agent state: {state.get('next_agent')}")
     
-    # Check if we're processing query_agent response
     if state.get("next_agent") == "process_query_result":
         logger.info("ROOT AGENT: Processing query_agent results")
-
         query_result = messages[-1].content[0]["text"]
         logger.info(f"QUERY AGENT RESULT TEXT: {query_result}")
         # Root agent interprets query results

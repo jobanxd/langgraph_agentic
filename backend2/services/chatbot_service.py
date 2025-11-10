@@ -2,6 +2,7 @@ import logging
 from typing import Dict
 from langchain_core.messages import HumanMessage, AIMessage
 from agents.graph import graph
+from agents.graph1 import graph as graph1
 from agents.state import AgentState
 from utils.logging_utils import boxed_log
 
@@ -50,7 +51,7 @@ class ChatbotService:
         }
         
         # Run graph
-        result = graph.invoke(initial_state)
+        result = graph1.invoke(initial_state)
         
         # Extract response - get the last message
         messages = result.get("messages", [])
