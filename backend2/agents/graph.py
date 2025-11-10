@@ -2,7 +2,7 @@ import logging
 from typing import Literal
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph import StateGraph, END
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage
 
 from .state import AgentState
@@ -26,7 +26,7 @@ query_llm = ChatGoogleGenerativeAI(
     google_api_key=settings.GOOGLE_API_KEY,)
 
 # Create query agent with tools
-query_agent = create_react_agent(
+query_agent = create_agent(
     query_llm,
     tools=[execute_query],
 )
