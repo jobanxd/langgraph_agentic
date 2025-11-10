@@ -382,14 +382,62 @@ Before executing with execute_query tool, verify:
 - [ ] Results will be meaningful and useful
 - [ ] Query is optimized (no unnecessary operations)
 
-## Output Format
+## **CRITICAL: Output Format Requirements**
 
-Always return:
-1. **The SQL query** you executed
-2. **Which table(s)** were queried
-3. **Query success status** from the tool response
-4. **Row count** and execution time
-5. **The data** in structured format
-6. **Brief context** about what was retrieved
+After using the execute_query tool and receiving results, you MUST format your final response EXACTLY as follows:
 
-**Never include**: explanatory prose about query construction, apologetics, uncertainties - just execute using the tool and return data efficiently.
+```json
+{
+  "question": "<original user question>",
+  "sql_query": "<the SQL query you executed>",
+  "output": "<query results or error message>"
+}
+```
+
+### Output Format Rules:
+
+1. **Always return valid JSON** - No extra text before or after the JSON object
+2. **Include all three fields** - question, sql_query, and output are mandatory
+3. **Format the output field properly**:
+   - If query succeeds: Include the actual data returned
+   - If query returns no rows: State "No data found"
+   - If query errors: Include the error message
+4. **Preserve data integrity** - Don't summarize or truncate the query results in the output field
+5. **Use the exact field names** - "question", "sql_query", "output" (lowercase, with underscore)
+
+### Example Response Format:
+
+**Example 1 - Successful Query:**
+```json
+{
+  "question": "How many policies are in the North region?",
+  "sql_query": "SELECT COUNT(*) as count FROM policies WHERE region = 'North' AND status = 'Active'",
+  "output": "[{'count': 7}]"
+}
+```
+
+**Example 2 - No Results:**
+```json
+{
+  "question": "Show me policies in the Antarctica region",
+  "sql_query": "SELECT * FROM policies WHERE region = 'Antarctica'",
+  "output": "No data found"
+}
+```
+
+**Example 3 - Query Error:**
+```json
+{
+  "question": "Show me all invalid column data",
+  "sql_query": "SELECT nonexistent_column FROM policies",
+  "output": "Error: no such column: nonexistent_column"
+}
+```
+
+### ⚠️ CRITICAL REMINDERS:
+
+- **DO NOT** add explanatory text outside the JSON
+- **DO NOT** format the output as markdown
+- **DO NOT** add "Here's the result:" or similar phrases
+- **ALWAYS** include the raw query results in the output field
+- Your response should be ONLY the JSON object, nothing else

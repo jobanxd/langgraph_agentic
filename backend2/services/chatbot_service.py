@@ -18,11 +18,28 @@ class ChatbotService:
         # Get or create session history
         if session_id not in self.sessions:
             self.sessions[session_id] = []
-        logger.info(f"Processing message for session {session_id}, user {user_id}")
-        
+            logger.info(f"NEW SESSION | Session: {session_id} | User: {user_id}")
+        else:
+            logger.info(f"CONTINUING SESSION | Session: {session_id} | User: {user_id}")
+    
+        logger.info(f"USER: {user_input}")
+
         # Add user message to history
         self.sessions[session_id].append(HumanMessage(content=user_input))
-        logger.debug(f"User message added: {user_input}")
+
+        # Show chat history if this is a continuing conversation
+        if len(self.sessions[session_id]) > 1:
+            logger.debug("Chat History:")
+            msg_number = 1
+            for msg in self.sessions[session_id][:-1]: 
+                if isinstance(msg, HumanMessage):
+                    logger.debug(f"  [{msg_number}] USER: {msg.content}")
+                    msg_number += 1
+                elif isinstance(msg, AIMessage):
+                    if isinstance(msg.content, str) and msg.content.strip():
+                        preview = msg.content[:15] + "..." if len(msg.content) > 15 else msg.content
+                        logger.debug(f"  [{msg_number}] AI: {preview}")
+                        msg_number += 1
 
         # Create initial state
         initial_state: AgentState = {
@@ -31,7 +48,6 @@ class ChatbotService:
             "user_id": user_id,
             "next_agent": ""
         }
-        logger.debug(f"Initial state prepared: {initial_state}")
         
         # Run graph
         result = graph.invoke(initial_state)

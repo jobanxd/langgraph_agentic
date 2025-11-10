@@ -41,13 +41,19 @@ def root_agent_node(state: AgentState) -> AgentState:
     # Check if we're processing query_agent response
     if state.get("next_agent") == "process_query_result":
         logger.info("ROOT AGENT: Processing query_agent results")
+
+        query_result = messages[-1].content[0]["text"]
+        logger.info(f"QUERY AGENT RESULT TEXT: {query_result}")
         # Root agent interprets query results
-        # system_prompt = f"{root_profile.instruction}\n\n{root_profile.description}"
-        # final_response = root_llm.invoke([{"role": "system", "content": system_prompt}] + list(messages))
-        post_procesing_prompt = f"""Relay the query results back to the user word-for-word."""
-        logger.info(f"QUERY AGENT RESULTS: {messages[-1].content[0]["text"]}")
-        final_response = root_llm.invoke([{"role": "system", "content": post_procesing_prompt},
-                                          {"role": "user", "content": (messages[-1].content[0]["text"])}])
+        system_prompt = f"{root_profile.instruction}\n\n{root_profile.description}"
+        post_procesing_prompt = f"""Based on the query results below, generate a natural, helpful response to answer the user's question.
+
+Query Results: 
+{query_result}
+
+Provide a clear, conversational answer with insights from the data."""
+        final_response = root_llm.invoke([{"role": "system", "content": system_prompt},
+                                          {"role": "user", "content": post_procesing_prompt}])
         boxed_log(f"ROOT AGENT FINAL RESPONSE: {final_response.content}", logger, level="info")
         return {"messages": [final_response], "next_agent": "END"}
     
