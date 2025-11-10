@@ -76,8 +76,12 @@ def root_agent_node(state: AgentState) -> AgentState:
     logger.info("ROOT AGENT NODE ENTERED")
 
     result = root_agent.invoke(state)
+    logger.info("Result from ROOT AGENT obtained: %s", result)
     
     final_message = result["messages"][-1]
+    if isinstance(final_message.content, list):
+        text = final_message.content[0].get("text", "")
+        final_message.content = text
     boxed_log(f"ROOT AGENT FINAL RESPONSE: {final_message.content}", logger, level="info")
     
     return {
